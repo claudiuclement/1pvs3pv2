@@ -40,8 +40,8 @@ if __name__ == "__main__":
     tilting_point, profit_3P_Seller, profit_1P_Vendor = find_tilting_point(fba_fee, vendor_terms)
     if tilting_point is not None:
         print(f"The tilting point where the 3P(Seller) business model becomes more profitable is at a price of {tilting_point:.2f}")
-        print(f"Profit for 3P(Seller) business model at the tilting point: {profit_3P_Seller:.2f}")
-        print(f"Profit for 1P(Vendor) business model at the tilting point: {profit_1P_Vendor:.2f}")
+        print(f"Profit for both models at the tilting point is: {profit_3P_Seller:.2f}")
+        print(f"The hypotheses include a Seller fee of 15%, VAT rate of 20%, a TACOS of 10% and an Amazon margin of 30%.")
 
 # Flask App
 app = Flask(__name__)
