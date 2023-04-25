@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, jsonify
 def calculate_profit_3P_Seller(x, fba_fee):
     vat_rate = 0.2
@@ -44,7 +45,7 @@ if __name__ == "__main__":
         print(f"The hypotheses include a Seller fee of 15%, VAT rate of 20%, a TACOS of 10% and an Amazon margin of 30%.")
 
 # Flask App
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 @app.route('/')
 def index():
