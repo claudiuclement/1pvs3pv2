@@ -12,7 +12,7 @@ body {
   }
   
   .custom-button {
-    background-color: #ff0000; /* red color */
+    background-color: #64D7BE; /* e-Comas green */
     color: white;
     padding: 10px 20px;
     border: none;
@@ -21,6 +21,6 @@ body {
   }
   
   .custom-button:hover {
-    background-color: #cc0000; /* darker red color */
+    background-color: #50AC98; /* darker darker e-Comas green */
   }
   
