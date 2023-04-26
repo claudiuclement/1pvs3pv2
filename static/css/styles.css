@@ -20,9 +20,11 @@ body {
     cursor: pointer;
   }
   
-  .custom-button:hover {
+  .custom-button:hover,
+  .custom-button:active {
     background-color: #50AC98; /* darker darker e-Comas green */
   }
+  
   .graph-container {
     display: flex;
     justify-content: center;
