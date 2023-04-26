@@ -23,4 +23,10 @@ body {
   .custom-button:hover {
     background-color: #50AC98; /* darker darker e-Comas green */
   }
+  .graph-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
   
