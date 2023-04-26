@@ -20,3 +20,7 @@ body {
     cursor: pointer;
   }
   
+  .custom-button:hover {
+    background-color: #cc0000; /* darker red color */
+  }
+  
