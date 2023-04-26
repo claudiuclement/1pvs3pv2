@@ -40,7 +40,7 @@ def find_tilting_point(fba_fee, vendor_terms):
             return None, None, None
     return price, profit_3P_Seller, profit_1P_Vendor
 
-def generate_profit_graph(fba_fee, vendor_terms):
+def generate_profit_graph(fba_fee, vendor_terms, tilting_point):
     x = np.arange(1, 301, 1)
     y_3P = [calculate_profit_3P_Seller(price, fba_fee) for price in x]
     y_1P = [calculate_profit_1P_Vendor(price, vendor_terms) for price in x]
@@ -48,6 +48,13 @@ def generate_profit_graph(fba_fee, vendor_terms):
     plt.figure(figsize=(10, 5))
     plt.plot(x, y_3P, label="3P Model")
     plt.plot(x, y_1P, label="1P Model")
+    
+    # Plot the intersection point and add a text annotation
+    if tilting_point is not None:
+        profit_3P_Seller = calculate_profit_3P_Seller(tilting_point, fba_fee)
+        plt.plot(tilting_point, profit_3P_Seller, marker='o', markersize=5, color="red")
+        plt.annotate(f'({tilting_point:.2f}, {profit_3P_Seller:.2f})', (tilting_point, profit_3P_Seller), textcoords="offset points", xytext=(-15,7), ha='center', fontsize=8, color='red')
+    
     plt.xlabel("Price")
     plt.ylabel("Profit")
     plt.title("Profit Intersection of 3P and 1P Models")
@@ -57,6 +64,7 @@ def generate_profit_graph(fba_fee, vendor_terms):
     plt.savefig(file_name, bbox_inches='tight')
     plt.close()
     return file_name
+
 
 # Flask App
 app = Flask(__name__, static_folder='static')
@@ -71,7 +79,7 @@ def calculate():
     vendor_terms = float(request.form['vendor_terms'])
     tilting_point, profit_3P_Seller, profit_1P_Vendor = find_tilting_point(fba_fee, vendor_terms)
 
-    graph_file_name = generate_profit_graph(fba_fee, vendor_terms)
+    graph_file_name = generate_profit_graph(fba_fee, vendor_terms, tilting_point)
 
     if tilting_point is not None:
         return jsonify({
