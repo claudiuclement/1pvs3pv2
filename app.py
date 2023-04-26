@@ -4,6 +4,7 @@ import numpy as np
 from flask import Flask, render_template, request, jsonify
 import base64
 from io import BytesIO
+import time
 
 def calculate_profit_3P_Seller(x, fba_fee):
     vat_rate = 0.2
@@ -52,8 +53,10 @@ def generate_profit_graph(fba_fee, vendor_terms):
     plt.title("Profit Intersection of 3P and 1P Models")
     plt.legend()
     plt.grid(True)
-    plt.savefig('static/profit_graph.png', bbox_inches='tight')
+    file_name = f'static/profit_graph_{int(time.time())}.png'
+    plt.savefig(file_name, bbox_inches='tight')
     plt.close()
+    return file_name
 
 # Flask App
 app = Flask(__name__, static_folder='static')
@@ -68,14 +71,14 @@ def calculate():
     vendor_terms = float(request.form['vendor_terms'])
     tilting_point, profit_3P_Seller, profit_1P_Vendor = find_tilting_point(fba_fee, vendor_terms)
 
-    generate_profit_graph(fba_fee, vendor_terms)
+    graph_file_name = generate_profit_graph(fba_fee, vendor_terms)
 
     if tilting_point is not None:
         return jsonify({
             'tilting_point': f"{tilting_point:.2f}",
             'profit_3P_Seller': f"{profit_3P_Seller:.2f}",
             'profit_1P_Vendor': f"{profit_1P_Vendor:.2f}",
-            'graph_url': '/static/profit_graph.png'
+            'graph_url': f'/{graph_file_name}'
         })
     else:
         return jsonify({'error': "Could not find tilting point within reasonable limits."})
