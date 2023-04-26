@@ -53,18 +53,6 @@ def generate_profit_graph(fba_fee, vendor_terms):
     plt.title("Profit Intersection of 3P and 1P Models")
     plt.legend()
     plt.grid(True)
-
-    # Find intersection point
-    idx = np.argwhere(np.diff(np.sign(np.array(y_1P) - np.array(y_3P)))).flatten()
-    intersection_point = (x[idx], 0)
-
-    # Plot intersection point
-    plt.plot(intersection_point[0], intersection_point[1], marker='o', markersize=10, color="red")
-    plt.annotate(f"({intersection_point[0]:.2f}, {intersection_point[1]:.2f})", intersection_point, textcoords="offset points", xytext=(0,10), ha='center')
-
-    # Show intersection point coordinates
-    print(f"Intersection Point: ({intersection_point[0]:.2f}, {intersection_point[1]:.2f})")
-
     file_name = f'static/profit_graph_{int(time.time())}.png'
     plt.savefig(file_name, bbox_inches='tight')
     plt.close()
