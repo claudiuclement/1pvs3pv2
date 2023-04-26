@@ -53,7 +53,7 @@ def generate_profit_graph(fba_fee, vendor_terms, tilting_point):
     if tilting_point is not None:
         profit_3P_Seller = calculate_profit_3P_Seller(tilting_point, fba_fee)
         plt.plot(tilting_point, profit_3P_Seller, marker='o', markersize=5, color="red")
-        plt.annotate(f'({tilting_point:.2f}, {profit_3P_Seller:.2f})', (tilting_point, profit_3P_Seller), textcoords="offset points", xytext=(-15,7), ha='center', fontsize=8, color='red')
+        plt.annotate(f'({tilting_point:.2f})', (tilting_point), textcoords="offset points", xytext=(-15,7), ha='center', fontsize=8, color='red')
     
     plt.xlabel("Price")
     plt.ylabel("Profit")
