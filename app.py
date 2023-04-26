@@ -1,5 +1,8 @@
 import os
+import matplotlib.pyplot as plt
+import numpy as np
 from flask import Flask, render_template, request, jsonify
+
 def calculate_profit_3P_Seller(x, fba_fee):
     vat_rate = 0.2
     price_without_vat = x / (1 + vat_rate)
@@ -34,15 +37,21 @@ def find_tilting_point(fba_fee, vendor_terms):
             return None, None, None
     return price, profit_3P_Seller, profit_1P_Vendor
 
-if __name__ == "__main__":
-    fba_fee = float(input("Please enter the FBA fee for 3P(Seller) business model: "))
-    vendor_terms = float(input("Please enter the vendor terms (in percentage) for 1P(Vendor) business model: "))
+def generate_profit_graph(fba_fee, vendor_terms):
+    x = np.arange(1, 301, 1)
+    y_3P = [calculate_profit_3P_Seller(price, fba_fee) for price in x]
+    y_1P = [calculate_profit_1P_Vendor(price, vendor_terms) for price in x]
 
-    tilting_point, profit_3P_Seller, profit_1P_Vendor = find_tilting_point(fba_fee, vendor_terms)
-    if tilting_point is not None:
-        print(f"The tilting point where the 3P(Seller) business model becomes more profitable is at a price of {tilting_point:.2f}")
-        print(f"Profit for both models at the tilting point is: {profit_3P_Seller:.2f}")
-        print(f"The hypotheses include a Seller fee of 15%, VAT rate of 20%, a TACOS of 10% and an Amazon margin of 30%.")
+    plt.figure(figsize=(10, 5))
+    plt.plot(x, y_3P, label="3P Model")
+    plt.plot(x, y_1P, label="1P Model")
+    plt.xlabel("Price")
+    plt.ylabel("Profit")
+    plt.title("Profit Intersection of 3P and 1P Models")
+    plt.legend()
+    plt.grid(True)
+    plt.savefig('static/profit_graph.png', bbox_inches='tight')
+    plt.close()
 
 # Flask App
 app = Flask(__name__, static_folder='static')
@@ -57,11 +66,14 @@ def calculate():
     vendor_terms = float(request.form['vendor_terms'])
     tilting_point, profit_3P_Seller, profit_1P_Vendor = find_tilting_point(fba_fee, vendor_terms)
 
+    generate_profit_graph(fba_fee, vendor_terms)
+
     if tilting_point is not None:
         return jsonify({
             'tilting_point': f"{tilting_point:.2f}",
             'profit_3P_Seller': f"{profit_3P_Seller:.2f}",
             'profit_1P_Vendor': f"{profit_1P_Vendor:.2f}",
+            'graph_url': '/static/profit_graph.png'
         })
     else:
         return jsonify({'error': "Could not find tilting point within reasonable limits."})

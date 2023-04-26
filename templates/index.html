@@ -24,8 +24,41 @@
       </form>
 
       <div id="result" class="mt-4"></div>
+      <!-- Add this where you want to display the graph -->
+      <img id="profit-graph" src="" alt="Profit graph" style="display: none;">
     </div>
 
-    <script src="/static/js/scripts.js"></script>
+    <script>
+      // Add this script block to replace your /static/js/scripts.js file
+      $(document).ready(function () {
+        $("#calc-form").submit(function (event) {
+          event.preventDefault();
+
+          $.ajax({
+            url: "/calculate",
+            method: "POST",
+            data: $(this).serialize(),
+            success: function (response) {
+              if (response.error) {
+                $("#result").html(
+                  `<div class="alert alert-danger">${response.error}</div>`
+                );
+              } else {
+                $("#result").html(
+                  `<div class="alert alert-success">
+                     The tilting point where the 3P(Seller) business model becomes more profitable is at a price of ${response.tilting_point}.<br>
+                     Profit for both models at the tilting point is: ${response.profit_3P_Seller}.<br>
+                     The hypotheses include a Seller fee of 15%, VAT rate of 20%, a TACOS of 10% and an Amazon margin of 30%.
+                   </div>`
+                );
+                var graph = document.getElementById('profit-graph');
+                graph.src = response.graph_url;
+                graph.style.display = 'block';
+              }
+            },
+          });
+        });
+      });
+    </script>
   </body>
 </html>
