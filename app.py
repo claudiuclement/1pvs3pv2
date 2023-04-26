@@ -2,6 +2,8 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 from flask import Flask, render_template, request, jsonify
+import base64
+from io import BytesIO
 
 def calculate_profit_3P_Seller(x, fba_fee):
     vat_rate = 0.2
